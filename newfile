@@ -1,10 +1,11 @@
 #!/bin/bash
 
-
+#assigned command to a variable which will change if needed
 Editor=0
 Force=0
 
-
+#Checks for a command arguement if one is given
+#If not it will take the first arguement as the file name
 if [[ $1  == -* ]]
 then
 	File=$2
@@ -14,18 +15,21 @@ else
 	File=$1
 fi
 
+#If a command is given it will check if the commands are valid if not it will skip over them
 if [ ! -z  $Command ]
 then
+	#checks for the c command, this is to take the filename from the clipboard
 	if [[ $Command == *"c"* ]]
 	then
 		File=`xclip -selection clipboard -o`
 	fi
 	
+	#A help command just here to show the user what commands are available to use and how to use them
 	if [[ $Command == "-h" ]]
 	then
 		echo "An easy way to create newfile types with the SheBang at the top of the file"
-		echo "Currently Works for ShellScripting"
-		echo "newfile [-option] [filename]"
+		echo "Currently places Shebang into ShellScripting and Python"
+		echo "newfile [-option] [filename] or newfile [filename]"
 		echo ""
 		echo "-c	-Takes Filename from the clipboard"
 		echo "-f	-Forcefully replaces file if there is already a file with the same name"
@@ -34,10 +38,13 @@ then
 		exit
 	fi
 
+	#will set the Editor variable to run for skipping a prompt later in new file process
 	if [[ $Command == *"v"* ]]
 	then
 		Editor="run"
 	fi
+
+	#This checks for the force command and will assign the Force variable to be True
 	if [[ $Command == *"f"* ]]
 	then
 		Force="True"
@@ -45,7 +52,7 @@ then
 fi
 
 
-
+#when no file name or command is used it will end the program and give you the prompt below to make sure you did it all right
 if [ -z $File ]
 then
 	echo "File cannot be opened as no name has been given"
@@ -53,6 +60,7 @@ then
 	exit
 fi
 
+#If the new file you wish to create has already been made it will delete the previous one
 if [ $Force == "True" ]
 then
 	if [ -f $File ]
@@ -61,21 +69,21 @@ then
 	fi
 fi
 
-
+#searches for if the file already exists if it does it will ask you if u wish to open the file in vim 
+#It will take input from the user to decide what option to take
 if [ -f $File ] 
 then
-	echo "File already exists"
-	echo "$File"
+	echo "$File already exists"
 	read -p "Do you wish to open file in vim? (yes/no) " Open
 	a=0
         while [ $a != 1 ]
         do
-            if [ $Open = "yes" ]
+            if [ $Open = "yes" ] || [ $Open = "y" ] || [ $Open = "Yes" ] || [ $Open = "Y" ]
             then
                     exec vim $File
                     a=1
 
-            elif [ $Open = "no" ]
+            elif [ $Open = "no" ]  || [ $Open = "n" ] || [ $Open = "No" ] || [ $Open = "N" ]
             then
                     exit
             else
@@ -85,26 +93,52 @@ then
 
 fi
 
+#Created the file using File variable as name
 touch $File
-echo "#!/bin/sh" >> $File
-echo "" >> $File
-echo "" >> $File
-echo "File has Been created without errors"
-sleep 2
+
+#Checks if the filename contains .sh at the end of the file.
+#if it does it will as the shell script Shebang to the begining of the file
+if [[ $File == *".sh" ]]
+then
+	echo "#!/bin/sh" >> $File
+	echo "" >> $File
+	echo "" >> $File
+	echo "File has Been created Adding ShellScript Shebang"
+
+#Checks if the filename contains .py at the ending of the file
+#Places the python Shebang if it does
+elif [[ $File == *".py" ]]
+then
+	echo "#!/bin/python" >> $File
+	echo "" >> $File
+	echo "" >> $File
+	echo "File has been created Adding Python Shebang"
+
+#if the script cannot find the file extension it will not add a Shebang to the file
+else
+	echo "Unable to find correct Shebang for file"
+fi
+
+#If the editor variable is set to run it will not ask if you want to open the file in vim
 if [ $Editor == "run" ]
 then
+	echo "Opening Vim ..."
 	exec vim $File
+
+#If the editor variable is not set it will prompt you by asking if you want to open the file in vim
 else
 	read -p "Do you wish to open $File in vim? (yes/no) " Editor
 	a=0
         while [ $a != 1 ]
         do
-            if [ $Editor = "yes" ]
+            if [ $Editor = "yes" ] || [ $Editor = "y" ] || [ $Editor = "Yes" ] || [ $Editor = "Y" ]
+
             then
-                    exec vim $File
+                    echo "Opening Vim ..."
+		    exec vim $File
                     a=1
 
-            elif [ $Editor = "no" ]
+            elif [ $Editor = "no" ] || [ $Editor = "n" ] || [ $Editor = "No" ] || [ $Editor = "N" ]
             then
                     exit
             else
