@@ -1,0 +1,114 @@
+#!/bin/bash
+
+
+Editor=0
+Force=0
+
+
+if [[ $1  == -* ]]
+then
+	File=$2
+	Command=$1
+
+else
+	File=$1
+fi
+
+if [ ! -z  $Command ]
+then
+	if [[ $Command == *"c"* ]]
+	then
+		File=`xclip -selection clipboard -o`
+	fi
+	
+	if [[ $Command == "-h" ]]
+	then
+		echo "An easy way to create newfile types with the SheBang at the top of the file"
+		echo "Currently Works for ShellScripting"
+		echo "newfile [-option] [filename]"
+		echo ""
+		echo "-c	-Takes Filename from the clipboard"
+		echo "-f	-Forcefully replaces file if there is already a file with the same name"
+		echo "-h	-Shows help for newfile command"
+		echo "-v	-Opens the new file in vim editor as soon as it is created"
+		exit
+	fi
+
+	if [[ $Command == *"v"* ]]
+	then
+		Editor="run"
+	fi
+	if [[ $Command == *"f"* ]]
+	then
+		Force="True"
+	fi
+fi
+
+
+
+if [ -z $File ]
+then
+	echo "File cannot be opened as no name has been given"
+	echo "Please do newfile -h for help in using command"
+	exit
+fi
+
+if [ $Force == "True" ]
+then
+	if [ -f $File ]
+	then
+		rm $File
+	fi
+fi
+
+
+if [ -f $File ] 
+then
+	echo "File already exists"
+	echo "$File"
+	read -p "Do you wish to open file in vim? (yes/no) " Open
+	a=0
+        while [ $a != 1 ]
+        do
+            if [ $Open = "yes" ]
+            then
+                    exec vim $File
+                    a=1
+
+            elif [ $Open = "no" ]
+            then
+                    exit
+            else
+                    read -p "Please Choose a valid option: " Open
+            fi
+        done
+
+fi
+
+touch $File
+echo "#!/bin/sh" >> $File
+echo "" >> $File
+echo "" >> $File
+echo "File has Been created without errors"
+sleep 2
+if [ $Editor == "run" ]
+then
+	exec vim $File
+else
+	read -p "Do you wish to open $File in vim? (yes/no) " Editor
+	a=0
+        while [ $a != 1 ]
+        do
+            if [ $Editor = "yes" ]
+            then
+                    exec vim $File
+                    a=1
+
+            elif [ $Editor = "no" ]
+            then
+                    exit
+            else
+                    read -p "Please Choose a valid option: " Editor
+            fi
+        done
+fi
