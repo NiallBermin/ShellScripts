@@ -6,8 +6,8 @@ It will place it at top of the new file and then proceed to ask if you wish to o
 # Examples
 
 ```
-newfile file.sh     # will create a new file called file.sh,
-                    If the file already exists it will ask if you wish to open the program in vim instead
+newfile file.sh     # will create a new file called file.sh, If the file already exists it 
+                    will ask if you wish to open the program in vim instead
 ```
 ```
 newfile -c          # will take the file name directly from your clip board
