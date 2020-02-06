@@ -1,0 +1,34 @@
+.\" Manpage for newfile.
+.TH newfile 1 "4th Febuary 2020" "1.0" "newfile main page"
+
+.SH NAME
+newfile \- simple way of createing new files which include a shebang
+
+.SH SYNOPSIS
+newfile [-f Filename]  [-v Filename] [-c] [-h] 
+
+.SH DESCRIPTION
+newfile is a file creator. When the file has been created it will ask you if you wish to view the program in vim. If the file 
+already exists it prompt you to open the already created file in vim. Once the file has been created it will add the SHEBANG 
+for files that it recognises. Currently works for Python and ShellScripting
+
+.SH OPTIONS
+The newfile takes an argument and will either create the file or open the file in vim.
+.IP	
+-f		will forcefully remove any files in the same directory with the same name and will replace them with a new file
+.IP 
+-c		will take the file name directly from the clipboard
+.IP 
+-v		will open the file automaticaly in vim editor after creation
+.IP 
+-h		will show you the help options.
+
+.SH SEE ALSO
+xclip(1), vim(1)
+
+.SH BUGS
+No known bugs. Please report any if found to my github
+
+.SH AUTHOR
+Niall Bermingham - https://github.com/NiallBermin
+
