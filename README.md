@@ -24,3 +24,6 @@ for more information on what the program does you can open the man file attatche
 ```
 newfile -h
 ```
+
+# Not Working
+you will have to have vim and xclip installed to run the script at its current state.
